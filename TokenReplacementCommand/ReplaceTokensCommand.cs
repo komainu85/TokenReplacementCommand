@@ -1,6 +1,7 @@
 ﻿using Sitecore;
 using Sitecore.Data.Fields;
 using Sitecore.Data.Items;
+using Sitecore.Diagnostics;
 using Sitecore.Shell.Framework.Commands;
 using System.Collections.Specialized;
 namespace MikeRobbins.TokenCommands
@@ -12,6 +13,30 @@ namespace MikeRobbins.TokenCommands
             Item item = context.Items[0];
 
             Context.ClientPage.SendMessage(this, "item:load(id=" + item.ID + ")");
+        }
+
+        public override CommandState QueryState(CommandContext context)
+        {
+            Assert.ArgumentNotNull(context, "context");
+
+            if ((int)context.Items.Length != 1)
+            {
+                return CommandState.Hidden;
+            }
+            Item items = context.Items[0];
+            if (items.Appearance.ReadOnly)
+            {
+                return CommandState.Disabled;
+            }
+            if (items.Versions.Count == 0)
+            {
+                return CommandState.Disabled;
+            }
+            if (Command.IsLockedByOther(items))
+            {
+                return CommandState.Disabled;
+            }
+            return base.QueryState(context);
         }
 
         private void ReplaceTokens(Item item)
