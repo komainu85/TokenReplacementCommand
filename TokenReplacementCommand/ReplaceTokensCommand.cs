@@ -9,17 +9,9 @@ namespace MikeRobbins.TokenCommands
     {
         public override void Execute(CommandContext context)
         {
-
             Item item = context.Items[0];
 
-
-
-
-
             Context.ClientPage.SendMessage(this, "item:load(id=" + item.ID + ")");
-
-
-
         }
 
         private void ReplaceTokens(Item item)
