@@ -12,6 +12,8 @@ namespace MikeRobbins.TokenCommands
         {
             Item item = context.Items[0];
 
+            ReplaceTokens(item);
+
             Context.ClientPage.SendMessage(this, "item:load(id=" + item.ID + ")");
         }
 
